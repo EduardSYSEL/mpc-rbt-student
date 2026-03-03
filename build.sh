@@ -1,0 +1,6 @@
+cd build
+cmake ..
+make
+cd ..
+echo "KompilaceHOTOVO"
+
