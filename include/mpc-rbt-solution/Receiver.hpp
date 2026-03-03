@@ -15,8 +15,8 @@ public:
     create();
     configure();
     bind();
-    callback = [this]{receive(IPFrame & frame);}
-    //[this](const Socket::IPFrame & frame) { onDataReceived(frame); };
+   callback = std::bind(&Node::onDataReceived, this, std::placeholders::_1);
+    
     
   }
 

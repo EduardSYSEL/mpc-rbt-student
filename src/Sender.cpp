@@ -12,23 +12,24 @@ void Sender::Node::run()
 
 void Sender::Node::onDataTimerTick()
 {
-    
     data.x += 1.0;
     data.y += 1.0;
     data.z += 1.0;
+    data.timestamp = static_cast<uint64_t>(std::chrono::system_clock::now().time_since_epoch().count());
 
-  data.timestamp =
-    static_cast<uint64_t>(std::chrono::system_clock::now().time_since_epoch().count());
+  
+    Socket::IPFrame frame;
+    frame.port = config.remotePort;
+    frame.address = config.remoteAddress;
 
-  Socket::IPFrame frame{
-    .port = config.remotePort,
-    .address = config.remoteAddress,
+  
     if(!Utils::Message::serialize(frame, data))
     {
         RCLCPP_ERROR(logger, "Serialization failed");
         return;
     }
 
+    
     if(send(frame))
     {
         RCLCPP_INFO(logger, "Sent: x=%f y=%f z=%f", data.x, data.y, data.z);
@@ -37,8 +38,8 @@ void Sender::Node::onDataTimerTick()
     {
         RCLCPP_ERROR(logger, "Send failed");
     }
-  };
-  RCLCPP_INFO(logger, "Sending data to host: '%s:%d'", frame.address.c_str(), frame.port);
 
-  RCLCPP_INFO(logger, "\n\tstamp: %ld", data.timestamp);
+  
+    RCLCPP_INFO(logger, "Sending data to host: '%s:%d'", frame.address.c_str(), frame.port);
+    RCLCPP_INFO(logger, "\n\tstamp: %ld", data.timestamp);
 }

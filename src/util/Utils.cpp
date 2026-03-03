@@ -62,10 +62,7 @@ j = nlohmann::json{
     {"x", m.x},
     {"y", m.y},
     {"z", m.z}
-  };
-
-  j = nlohmann::json{
-    {"timestamp", m.timestamp},
+  
   };
 }
 
@@ -76,7 +73,7 @@ void Message::from_json(const nlohmann::json & j, Message & m)
   j.at("x").get_to(m.x);
   j.at("y").get_to(m.y);
   j.at("z").get_to(m.z);
-  j.at("timestamp").get_to(m.timestamp);
+
 }
 
 bool Message::serialize(Socket::IPFrame & f, const Message & m)
